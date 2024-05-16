@@ -3,9 +3,10 @@ from random import choice
 from higher_or_lower_art import logo, versus
 from game_data import data
 
-played = set()
+def play_round(account_1, played, score=0):
+  if len(played) > 0:
+    print(f"You're right! Current score: {score}")
 
-def play_round(account_1, score=0):
   round_accounts = {
     'A': account_1,
   }
@@ -24,18 +25,15 @@ def play_round(account_1, score=0):
   correct_answer = guess_correct(account_1['follower_count'], account_2['follower_count'], guess)
 
   if correct_answer:
-    print("CORRECT!")
-    print(f"{round_accounts[guess]['name']} has {round_accounts[guess]['follower_count']} million followers!")
     score += 1
 
     if len(played) == len(data):
       print("\nYOU DID IT! You guessed them ALL correct! Well done!\n")
       return
     else:
-      input("Press ENTER to continue...")
       os.system("clear")
       print(logo)
-      return play_round(round_accounts[guess], score)
+      return play_round(round_accounts[guess], played, score)
   else:
     correct_answer = account_2 if guess == "A" else account_1
     print(f"WRONG! It was {correct_answer['name']} with {correct_answer['follower_count']} million followers.")
@@ -62,7 +60,7 @@ def start():
   if input("Want to play 'Higer or Lower'? Type 'y' to play, hit ENTER to exit: ").lower() == 'y':
     os.system("clear")
     print(logo)
-    play_round(pick_account())
+    play_round(pick_account(), set())
   else:
     print("\nGoodbye")
 
